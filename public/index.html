@@ -53,6 +53,7 @@
 
       <section class="card">
         <h2>Объекты</h2>
+        <div class="categories" id="categories"></div>
         <div class="catalog" id="catalog"></div>
         <p class="muted">Нажмите, чтобы добавить объект на план</p>
       </section>
@@ -62,6 +63,14 @@
         <p id="selection-empty" class="muted">Нажмите на объект на плане, чтобы выбрать его</p>
         <div id="selection-body" hidden>
           <div class="selection-name" id="selection-name"></div>
+          <div class="size-row object-size">
+            <label>Ширина, м
+              <input id="input-obj-w" type="number" min="0.2" max="50" step="0.1">
+            </label>
+            <label>Длина, м
+              <input id="input-obj-h" type="number" min="0.2" max="50" step="0.1">
+            </label>
+          </div>
           <label class="rotation">Поворот: <b id="rotation-value">0°</b>
             <input id="input-rotation" type="range" min="0" max="355" step="5">
           </label>
@@ -74,7 +83,7 @@
       </section>
 
       <section class="card hint">
-        <p><b>Перетаскивайте</b> объекты мышью, <b>круглая ручка</b> — поворот.</p>
+        <p><b>Перетаскивайте</b> объекты мышью, <b>круглая ручка</b> — поворот, <b>квадратная</b> — размер.</p>
         <p><kbd>R</kbd> — повернуть, <kbd>Delete</kbd> — удалить.</p>
         <p>В 3D: вращайте сцену мышью, колесо — масштаб.</p>
       </section>

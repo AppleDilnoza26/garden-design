@@ -1,5 +1,5 @@
-import { CATALOG, clampObject } from './catalog.js';
-import { Plan2D } from './plan2d.js';
+import { CATALOG, CATEGORIES, clampObject, clampSize } from './catalog.js';
+import { Plan2D, drawThumbnail } from './plan2d.js';
 import { View3D } from './view3d.js';
 
 const STORAGE_KEY = 'gardendesign-project';
@@ -15,7 +15,10 @@ const els = {
   width: $('input-width'),
   length: $('input-length'),
   area: $('area-info'),
+  categories: $('categories'),
   catalog: $('catalog'),
+  objW: $('input-obj-w'),
+  objH: $('input-obj-h'),
   selEmpty: $('selection-empty'),
   selBody: $('selection-body'),
   selName: $('selection-name'),
@@ -64,6 +67,19 @@ function deleteSelected() {
   refresh();
 }
 
+function resizeSelected() {
+  const obj = selectedObject();
+  if (!obj) return;
+  const read = (input, fallback) => {
+    const v = parseFloat(input.value);
+    return Number.isFinite(v) ? clampSize(v) : fallback;
+  };
+  obj.w = read(els.objW, obj.w);
+  obj.h = read(els.objH, obj.h);
+  clampObject(obj, state);
+  refresh();
+}
+
 function rotateSelected(deg, absolute = false) {
   const obj = selectedObject();
   if (!obj) return;
@@ -78,7 +94,10 @@ function updatePanel() {
   els.selEmpty.hidden = !!obj;
   els.selBody.hidden = !obj;
   if (obj) {
-    els.selName.textContent = `${CATALOG[obj.type].name} · ${obj.w}×${obj.h} м`;
+    els.selName.textContent = CATALOG[obj.type].name;
+    // не перебиваем поле, пока пользователь в нём печатает
+    if (document.activeElement !== els.objW) els.objW.value = obj.w;
+    if (document.activeElement !== els.objH) els.objH.value = obj.h;
     els.rotation.value = obj.rotation;
     els.rotationValue.textContent = `${obj.rotation}°`;
   }
@@ -161,13 +180,34 @@ function clearProject() {
 }
 
 // ---------- События ----------
-for (const [type, def] of Object.entries(CATALOG)) {
+function showCategory(categoryId) {
+  els.categories.querySelectorAll('button').forEach((b) => {
+    b.classList.toggle('active', b.dataset.category === categoryId);
+  });
+  els.catalog.innerHTML = '';
+  for (const [type, def] of Object.entries(CATALOG)) {
+    if (def.category !== categoryId) continue;
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.title = `${def.name}, ${def.w}×${def.h} м`;
+    btn.append(drawThumbnail(type));
+    const label = document.createElement('span');
+    label.textContent = def.name;
+    btn.append(label);
+    btn.addEventListener('click', () => addObject(type));
+    els.catalog.appendChild(btn);
+  }
+}
+
+for (const cat of CATEGORIES) {
   const btn = document.createElement('button');
   btn.type = 'button';
-  btn.innerHTML = `${def.icon}<span>${def.name}</span>`;
-  btn.addEventListener('click', () => addObject(type));
-  els.catalog.appendChild(btn);
+  btn.dataset.category = cat.id;
+  btn.textContent = cat.name;
+  btn.addEventListener('click', () => showCategory(cat.id));
+  els.categories.appendChild(btn);
 }
+showCategory(CATEGORIES[0].id);
 
 document.querySelectorAll('.mode-switch button').forEach((b) => {
   b.addEventListener('click', () => setMode(b.dataset.mode));
@@ -175,6 +215,8 @@ document.querySelectorAll('.mode-switch button').forEach((b) => {
 
 els.width.addEventListener('change', applySize);
 els.length.addEventListener('change', applySize);
+els.objW.addEventListener('change', resizeSelected);
+els.objH.addEventListener('change', resizeSelected);
 els.rotation.addEventListener('input', () => rotateSelected(Number(els.rotation.value), true));
 $('btn-rotate-left').addEventListener('click', () => rotateSelected(-15));
 $('btn-rotate-right').addEventListener('click', () => rotateSelected(15));

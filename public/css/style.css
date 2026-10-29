@@ -156,6 +156,28 @@ body {
 }
 
 /* ---------- Каталог объектов ---------- */
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.categories button {
+  border: 1px solid var(--beige-300);
+  background: var(--white);
+  color: var(--muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.categories button:hover { border-color: var(--green-500); color: var(--green-700); }
+.categories button.active { background: var(--green-500); border-color: var(--green-500); color: var(--white); }
+
 .catalog {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -180,7 +202,10 @@ body {
 
 .catalog button:hover { border-color: var(--green-500); background: var(--green-100); }
 .catalog button:active { transform: scale(0.96); }
-.catalog svg { width: 34px; height: 34px; }
+.catalog button span { text-align: center; line-height: 1.2; }
+.catalog canvas { width: 40px; height: 40px; }
+
+.object-size { margin-bottom: 12px; }
 
 /* ---------- Выбранный объект ---------- */
 .selection-name { font-weight: 700; font-size: 16px; margin-bottom: 10px; }
