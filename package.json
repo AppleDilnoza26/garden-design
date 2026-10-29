@@ -1,0 +1,14 @@
+{
+  "name": "garden-design",
+  "version": "1.0.0",
+  "description": "GardenDesign — планировщик сада с 2D- и 3D-визуализацией",
+  "main": "server.js",
+  "private": true,
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.3",
+    "three": "^0.170.0"
+  }
+}

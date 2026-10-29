@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GardenDesign — планировщик сада</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "/vendor/three/build/three.module.js",
+        "three/addons/": "/vendor/three/examples/jsm/"
+      }
+    }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+        <path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z" fill="#4f8a4b"/>
+        <path d="M5 19c3-4 6-7 10-10" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span>GardenDesign</span>
+    </div>
+
+    <div class="mode-switch" role="tablist" aria-label="Режим просмотра">
+      <button type="button" data-mode="2d" class="active">2D-план</button>
+      <button type="button" data-mode="3d">3D-сад</button>
+    </div>
+
+    <div class="actions">
+      <button type="button" id="btn-save" class="btn primary">Сохранить</button>
+      <button type="button" id="btn-open" class="btn">Открыть</button>
+      <button type="button" id="btn-clear" class="btn ghost">Очистить</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <section class="card">
+        <h2>Участок</h2>
+        <div class="size-row">
+          <label>Ширина, м
+            <input id="input-width" type="number" min="2" max="200" step="0.5">
+          </label>
+          <label>Длина, м
+            <input id="input-length" type="number" min="2" max="200" step="0.5">
+          </label>
+        </div>
+        <p class="muted" id="area-info"></p>
+      </section>
+
+      <section class="card">
+        <h2>Объекты</h2>
+        <div class="catalog" id="catalog"></div>
+        <p class="muted">Нажмите, чтобы добавить объект на план</p>
+      </section>
+
+      <section class="card">
+        <h2>Выбранный объект</h2>
+        <p id="selection-empty" class="muted">Нажмите на объект на плане, чтобы выбрать его</p>
+        <div id="selection-body" hidden>
+          <div class="selection-name" id="selection-name"></div>
+          <label class="rotation">Поворот: <b id="rotation-value">0°</b>
+            <input id="input-rotation" type="range" min="0" max="355" step="5">
+          </label>
+          <div class="btn-row">
+            <button type="button" class="btn" id="btn-rotate-left" title="Повернуть на −15°">↺ 15°</button>
+            <button type="button" class="btn" id="btn-rotate-right" title="Повернуть на +15°">↻ 15°</button>
+            <button type="button" class="btn danger" id="btn-delete">Удалить</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card hint">
+        <p><b>Перетаскивайте</b> объекты мышью, <b>круглая ручка</b> — поворот.</p>
+        <p><kbd>R</kbd> — повернуть, <kbd>Delete</kbd> — удалить.</p>
+        <p>В 3D: вращайте сцену мышью, колесо — масштаб.</p>
+      </section>
+    </aside>
+
+    <div class="stage" id="stage">
+      <canvas id="plan-canvas"></canvas>
+      <div id="view3d" hidden></div>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
