@@ -119,8 +119,14 @@ function setMode(next) {
   });
   els.stage.classList.toggle('mode-3d', mode === '3d');
   els.view3d.hidden = mode !== '3d';
-  if (mode === '3d') view3d.show(state);
-  else { view3d.hide(); plan.resize(); }
+  if (mode === '3d') {
+    if (view3d.ready) view3d.show(state);
+    else {
+      // первая сборка сцены генерирует текстуры — даём браузеру показать уведомление
+      toast('Готовлю 3D-сцену…');
+      setTimeout(() => { if (mode === '3d') view3d.show(state); }, 50);
+    }
+  } else { view3d.hide(); plan.resize(); }
 }
 
 function applySize() {
